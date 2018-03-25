@@ -43,6 +43,16 @@ cp /usr/lcoal/php/etc/php-fpm.conf.default /usr/lcoal/php/etc/php-fpm.conf
 cp /usr/lcoal/php/etc/php-fpm.d/www.conf.default /usr/lcoal/php/etc/php-fpm.d/www.conf
 ```
 
+修改php-fpm子进程用户为www
+```
+vim /usr/local/php/php-fpm.d/www.conf
+
+#修改
+user = www
+group = www
+```
+
+
 添加systemctl服务
 ```
 cp /usr/local/src/php-7.2.3/sapi/fpm/init.d.php-fpm /etc/init.d/php-fpm
