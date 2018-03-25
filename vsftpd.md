@@ -29,3 +29,22 @@ passwd ftpuser
 systemctl start vsftpd
 ```
 
+添加sftp支持
+```
+openssl req -x509 -nodes -days 365 -newkey rsa:1024 -keyout /etc/vsftpd/vsftpd.pem -out /etc/vsftpd/vsftpd.pem
+
+# 在/etc/vsftpd/vsftpd.conf中添加
+ssl_enable=YES
+allow_anon_ssl=NO
+force_local_data_ssl=YES
+force_local_logins_ssl=YES
+ssl_tlsv1=YES
+ssl_sslv2=NO
+ssl_sslv3=NO
+rsa_cert_file=/etc/vsftpd/vsftpd.pem
+
+# 如果出现类似“服务器发回了不可路由的地址。使用服务器地址代替。”
+# “在网络安全组配置规则，放行ftp被动模式的高端端口1024/65535”
+
+```
+
