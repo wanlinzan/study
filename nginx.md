@@ -26,7 +26,7 @@ yum -y install pcre-devel openssl-devel
 
 创建用于NGINX的用户
 ```
-useradd -s /sbin/nologin nginx
+useradd -s /sbin/nologin www
 ```
 
 生成配置文件
