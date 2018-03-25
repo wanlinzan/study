@@ -27,7 +27,7 @@ yum -y install libxml2-devel curl-devel
 
 生成配置文件
 ```
-./configure --prefix=/usr/local/php --enable-fpm --with-curl 
+./configure --prefix=/usr/local/php --enable-fpm --with-curl --with-pdo-mysql
 ```
 
 
