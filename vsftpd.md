@@ -11,10 +11,8 @@ anonymous_enable=NO
 # 禁止用户切换到非ftp指定目录（自己的家目录）
 chroot_local_user=YES
 
-
 # 设置了禁止切换出家目录之后，不能具有写入权限，否则报错，所以最后面添加一行
 allow_writeable_chroot=YES
-
 ```
 
 创建ftp用户
