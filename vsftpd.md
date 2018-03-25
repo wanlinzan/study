@@ -31,6 +31,7 @@ systemctl start vsftpd
 
 添加sftp支持
 ```
+# 生成证书
 openssl req -x509 -nodes -days 365 -newkey rsa:1024 -keyout /etc/vsftpd/vsftpd.pem -out /etc/vsftpd/vsftpd.pem
 
 # 在/etc/vsftpd/vsftpd.conf中添加
