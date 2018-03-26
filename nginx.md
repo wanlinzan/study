@@ -59,6 +59,11 @@ location ~ \.php$ {
     root           /home/www;
     fastcgi_pass   127.0.0.1:9000;
     fastcgi_index  index.php;
+    
+    # 增加这两句支持PATH_INFO
+    fastcgi_split_path_info ^(.+\.php)(.*)$; 
+    fastcgi_param PATH_INFO $fastcgi_path_info;
+    
     fastcgi_param  SCRIPT_FILENAME  $document_root$fastcgi_script_name;
     include        fastcgi_params;
 }
