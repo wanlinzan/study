@@ -27,7 +27,7 @@ yum -y install libxml2-devel curl-devel
 
 生成配置文件
 ```
-./configure --prefix=/usr/local/php --enable-fpm --with-curl --with-pdo-mysql
+./configure --prefix=/usr/local/php --enable-fpm --with-curl --with-pdo-mysql --with-openssl
 ```
 
 
@@ -37,10 +37,16 @@ make && make install
 ```
 
 
+复制php.ini配置文件
+```
+cp /usr/local/src/php-7.2.3/php.ini-production /usr/local/php/lib/php.ini
+```
+
+
 添加php-fpm配置文件
 ```
-cp /usr/lcoal/php/etc/php-fpm.conf.default /usr/lcoal/php/etc/php-fpm.conf
-cp /usr/lcoal/php/etc/php-fpm.d/www.conf.default /usr/lcoal/php/etc/php-fpm.d/www.conf
+cp /usr/lcoal/src/php-7.2.3/etc/php-fpm.conf.default /usr/lcoal/php/etc/php-fpm.conf
+cp /usr/lcoal/src/php-7.2.3/etc/php-fpm.d/www.conf.default /usr/lcoal/php/etc/php-fpm.d/www.conf
 ```
 
 修改php-fpm子进程用户为www
@@ -70,4 +76,30 @@ systemctl enable php-fpm
 启动 php-fpm 
 ```
 systemctl start php-fpm
+```
+
+
+附录:编译动态扩展
+```
+# 进入源代码目录
+cd /usr/local/src/php/php-7.2.3/ext/openssl
+
+# 复制编译配置
+cp config0.m4 config.m4
+
+# 执行安装命令
+/usr/local/php/bin/phpize
+
+# 检测并生成配置
+./configure --with-openssl --with-php-config=/usr/local/php/bin/php-config
+
+# 编译并安装
+make && make install
+
+# 进入配置文件打开动态扩展，去掉前面的分号
+vi /usr/local/php/lib/php.ini 
+extension=openssl
+
+# 重启php-fpm
+systemctl restart php-fpm
 ```
