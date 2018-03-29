@@ -1,8 +1,6 @@
 
 - `ps --forest` 命令可以查看进程的树形结构
 ```bash
-# ps --forest
-
   PID TTY          TIME CMD
 23070 pts/0    00:00:00 bash
  9728 pts/0    00:00:00  \_ bash
@@ -24,3 +22,5 @@ root     23070 23068  0 10:45 pts/0    00:00:00 -bash
 ```bash
 ( pwd ; echo $BASH_SUBSHELL )
 ```
+
+
