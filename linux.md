@@ -24,3 +24,20 @@ root     23070 23068  0 10:45 pts/0    00:00:00 -bash
 ```
 
 
+- `jobs` 查看后台运行中的任务
+```bash
+[1]-  Running                 sleep 30000 &
+[2]+  Running                 sleep 40000 &
+```
+- `which ps` 查看命令存放位置
+```bash
+
+
+# which ps //查看命令存放位置
+/usr/bin/ps
+ 
+ 
+# jobs
+[1]-  Running                 sleep 30000 &
+[2]+  Running                 sleep 40000 &
+```
