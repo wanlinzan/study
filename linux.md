@@ -30,10 +30,40 @@ root     23070 23068  0 10:45 pts/0    00:00:00 -bash
 [1]-  Running                 sleep 30000 &
 [2]+  Running                 sleep 40000 &
  
+ 
 
+# type ps //显示和命令有关的信息
+ps is hashed (/usr/bin/ps)
+ 
+# type pwd //显示和命令有关的信息
+pwd is a shell builtin
+ 
 
+# type -a ps //显示所有和命令有关的信息
+ps is /usr/bin/ps
+ 
+# type -a pwd //显示所有和命令有关的信息
+pwd is a shell builtin
+pwd is /usr/bin/pwd
+ 
 
+# which pwd //显示外部命令文件的位置
+/usr/bin/pwd
 
+# !! //可以执行上次执行的命令
+ps --forest
+  PID TTY          TIME CMD
+23070 pts/0    00:00:00 bash
+ 9728 pts/0    00:00:00  \_ bash
+ 9761 pts/0    00:00:00      \_ bash
+21736 pts/0    00:00:00          \_ sleep
+21926 pts/0    00:00:00          \_ sleep
+ 9200 pts/0    00:00:00          \_ ps
+21303 pts/0    00:00:00 sleep
+
+# history -a //强制把本次会话历史写入history文件
+
+# !20 //执行history列表20的命令
 
 
 
