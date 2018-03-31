@@ -49,7 +49,7 @@ pwd is /usr/bin/pwd
 
 # which pwd //显示外部命令文件的位置
 /usr/bin/pwd
-
+ 
 # !! //可以执行上次执行的命令
 ps --forest
   PID TTY          TIME CMD
@@ -60,12 +60,21 @@ ps --forest
 21926 pts/0    00:00:00          \_ sleep
  9200 pts/0    00:00:00          \_ ps
 21303 pts/0    00:00:00 sleep
-
+ 
 # history -a //强制把本次会话历史写入history文件
-
+ 
 # !20 //执行history列表20的命令
+ 
 
 
+# useradd -D //查看或设置（后面加正常的参数）默认的参数
+GROUP=100
+HOME=/home
+INACTIVE=-1
+EXPIRE=
+SHELL=/bin/bash
+SKEL=/etc/skel
+CREATE_MAIL_SPOOL=yes
 
 
 
