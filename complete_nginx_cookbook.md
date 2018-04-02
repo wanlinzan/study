@@ -22,10 +22,12 @@ server {
 
 ### TCP 负载平衡
 ####问题
+ 
  您需要在两台或更多台TCP服务器之间分配负载。
 
 ####解决方案
- 使用NGINX的`stream`模块在TCP服务器上进行负载平衡
+ 
+使用NGINX的`stream`模块在TCP服务器上进行负载平衡
 ```
 stream {
     upstream mysql_read {
