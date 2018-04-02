@@ -47,7 +47,7 @@ stream {
 ### 负载平衡方式
 #### 问题
  循环法负载平衡不适合您的用例，因为您具有异构的工作负载或服务器池。
-####解决方案
+#### 解决方案
  使用NGINX的一种负载平衡方法，循环法，最少链接，最少时间，通用散列或IP散列：
 ```
 upstream backend {
@@ -66,10 +66,10 @@ upstream backend {
 
 
 ### 连接限制
-####问题
+#### 问题
  负载平衡服务器压力过重
 
-####解决方案
+#### 解决方案
  使用NGINX Plus的max_conns参数限制与上游服务器的连接：
 ```
 upstream backend {
@@ -86,9 +86,9 @@ upstream backend {
 
 # 智能session会话持久
 ### Sticky Cookie
-####问题
+#### 问题
  让同一个用户访问同一个服务器
-####解决方案
+#### 解决方案
 ```
 upstream backend {
     server backend1.example.com;
@@ -106,9 +106,9 @@ upstream backend {
 
 
 ### Sticky Learn
-####问题
+#### 问题
  您需要使用现有的Cookie将下游客户端绑定到上游服务器。
-####解决方案
+#### 解决方案
  使用 `sticky learn` 指令来发现和跟踪由上游应用程序创建的Cookie
 ```
 upstream backend {
@@ -123,9 +123,9 @@ upstream backend {
 ```
 
 ### Sticky Routing
-####问题
+#### 问题
  您需要精确控制持久会话如何路由到上游服务器
-####解决方案
+#### 解决方案
 ```
 map $cookie_jsessionid $route_cookie {
     ~.+\.(?P<route>\w+)$ $route;
@@ -143,9 +143,9 @@ upstream backend {
 
 
 ### Connection Draining
-####问题
+#### 问题
  在服务会话期间，您需要适当地移除服务器以进行维护或其他原因。
-####解决方案
+#### 解决方案
  通过NGINX Plus API使用drain参数指示NGINX停止发送尚未被跟踪的新连接：
 ```
 curl 'http://localhost/upstream_conf?upstream=backend&id=1&drain=1'
@@ -181,9 +181,9 @@ upstream {
 
 
 ### TCP 健康检查
-####问题
+#### 问题
  您需要检查上游TCP服务器的运行状况，并从池中删除不健康的服务器。
-####解决方案
+#### 解决方案
 ```
 stream {
     server {
@@ -197,9 +197,9 @@ stream {
  该示例主动监视上游服务器。 如果上游服务器无法响应由NGINX发起的三个或更多TCP连接，则认为上游服务器不健康。 NGINX每10秒执行一次检查。 服务器在通过两次健康检查后才会被认为是健康的。
 
 ### HTTP 健康检查
-####问题
+#### 问题
  您需要主动检查上游HTTP服务器的健康状况
-####解决方案
+#### 解决方案
 ```
 http {
     server {
@@ -226,6 +226,33 @@ http {
 
 
 ### 高可用性部署模式
-####问题
+#### 问题
 
-####解决方案
+#### 解决方案
+
+
+
+
+
+### 高可用性部署模式
+#### 问题
+
+#### 解决方案
+
+
+
+
+
+
+### 高可用性部署模式
+#### 问题
+
+#### 解决方案
+
+
+
+
+### 高可用性部署模式
+#### 问题
+
+#### 解决方案
