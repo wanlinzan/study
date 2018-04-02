@@ -78,11 +78,12 @@ upstream backend {
     server webserver1.example.com max_conns=25;
     server webserver2.example.com max_conns=15;
 }
+
+```
 配置每台服务器同时处理最大连接数max_conns
 共享内存大小zone backends 64k指定worker间共享每个服务器处理多少个连接以及多少个请求排队数据
 
 等待队列的大小，等待最长时间
-```
 
 # 智能session会话持久
 ### Sticky Cookie
@@ -224,31 +225,198 @@ http {
 
 ```
 
+# 高可用性部署模式
 
-### 高可用性部署模式
+### NGINX HA模式
+#### 问题
+您需要高度可用的负载平衡解决方案。
+#### 解决方案
+通过安装NGINX Plus存储库中的nginx-ha-keepalived软件包，使用NGINX Plus的HA模式。
+NGINX Plus存储库包含一个名为nginx-hakeepalived的软件包。 这个基于keepalived的软件包管理一个暴露给客户端的虚拟IP地址。 另一个过程在NGINX服务器上运行，确保NGINX Plus和keepalived进程正在运行。 Keepalived是利用虚拟路由器冗余协议（VRRP）的一个过程，通常将称为心跳的小型消息发送到备份服务器。 如果备份服务器连续三个周期未收到心跳，备份服务器将启动故障切换，将虚拟IP地址移到自身并成为主服务器。 nginxha-keepalived的故障转移功能可以配置为识别定制故障情况。
+
+
+
+### 使用DNS负载均衡负载平衡器
+#### 问题
+您需要在两台或更多台NGINX服务器之间分配负载。
+#### 解决方案
+通过将多个IP地址添加到DNS A记录，使用DNS循环跨越NGINX服务器。类似nginx默认循环负载模式
+
+
+
+
+
+
+### 在EC2上进行负载平衡
+#### 问题
+您在AWS中使用NGINX，而NGINX Plus HA不支持Amazon IP。
+#### 解决方案
+通过配置NGINX服务器的Auto Scaling组并将Auto Scaling组连接到弹性负载平衡器，将NGINX置于弹性负载平衡器之后。 或者，您可以通过Amazon Web Services控制台，命令行界面或API手动将NGINX服务器手动放入弹性负载均衡器。
+
+
+
+# 大规模可扩展的内容缓存
+
+### 缓存区域
+#### 问题
+您需要缓存内容并需要定义缓存的存储位置。
+#### 解决方案
+使用proxy_cache_path指令定义共享内存缓存区域和内容的位置：
+```
+proxy_cache_path /var/nginx/cache //缓存目录，存储缓存信息
+                 keys_zone=CACHE:60m //60m的共享内存空间，用于存储活动密钥和响应元数据的共享内存空间
+                 levels=1:2 //目录结构的级别
+                 inactive=3h //缓存有效期3小时
+                 max_size=20g;//最大20GB
+proxy_cache CACHE; // 通知特定的上下文以使用缓存区域
+
+```
+proxy_cache_path在HTTP上下文中有效，
+ 
+proxy_cache指令在HTTP，服务器和位置上下文中有效。
+
+
+### 缓存哈希键
+#### 问题
+你需要控制你的内容被缓存和查找的方式。
+#### 解决方案
+使用proxy_cache_key指令以及变量来定义构成缓存命中或未命中的内容：
+```
+proxy_cache_key "$host$request_uri $cookie_user";
+```
+这个缓存散列键将指示NGINX根据请求的主机和URI来缓存页面，以及定义用户的cookie。 有了这个，您可以缓存动态页面，而无需提供为其他用户生成的内容。
+
+
+
+
+
+### 绕过缓存
+#### 问题
+您需要绕过缓存的能力
+#### 解决方案
+使用具有非空值或非零值的proxy_cache_bypass指令。 一种方法是通过在不希望缓存的位置块中设置一个等于1的变量：
+```
+proxy_cache_bypass $ http_cache_bypass;
+```
+如果名为cache_bypass的HTTP请求标头设置为任何非0值，该配置将告诉NGINX绕过缓存。
+
+
+
+### 缓存性能
+#### 问题
+您需要通过在客户端进行缓存来提高性能。
+#### 解决方案
+使用客户端缓存控制标题：
+```
+location ~* \.(css|js)$ {
+    expires 1y;
+    add_header Cache-Control "public";
+}
+```
+该位置块指定客户端可以缓存CSS和JavaScript文件的内容。 expires指令指示客户端，他们的缓存资源在一年后将不再有效。
+add_header指令将HTTP响应头CacheControl添加到响应中，
+其值为public，它允许沿途的任何缓存服务器缓存资源。 如果我们指定私有，则只允许客户端缓存该值。
+
+### 清除缓存
+#### 问题
+您需要使缓存中的对象无效。
+#### 解决方案
+使用NGINX Plus的清除功能，proxy_cache_purge指令和一个非空值或零值变量：
+```
+map $request_method $purge_method {
+    PURGE 1;
+    default 0;
+}
+server {
+    ...
+    location / {
+        ...
+        proxy_cache_purge $purge_method;
+    }
+}
+
+```
+
+# 先进的媒体流
+
+### 为MP4和FLV提供服务
+#### 问题
+您需要传输源自MPEG-4（MP4）或Flash视频（FLV）的数字媒体。
+#### 解决方案
+指定一个HTTP位置块为.mp4或.flv。 NGINX将使用渐进式下载或HTTP伪码流式传输媒体，并寻求支持：
+```
+http {
+    server {
+        ...
+        location /videos/ {
+            mp4;
+        }
+        location ~ \.flv$ {
+            flv;
+        }
+    }
+}
+
+```
+示例位置块告诉NGINX视频目录中的文件是MP4格式类型，并且可以通过渐进式下载支持进行流式传输。 第二个位置块指示NGINX以.flv结尾的任何文件都是Flash Video格式，并且可以通过HTTP伪流控支持进行流式传输。
+
+### 用HLS流媒体
+#### 问题
+您需要支持在MP4文件中打包的H.264 / AAC编码内容的HTTP实时流（HLS）。
+#### 解决方案
+利用NGINX Plus的HLS模块进行实时分段，打包和复用，并控制碎片缓冲等，如转发HLS参数：
+```
+location /hls/ {
+    hls; # Use the HLS handler to manage requests
+    # Serve content from the following location
+    alias /var/www/video;
+    # HLS parameters
+    hls_fragment 4s;
+    hls_buffers 10 10m;//缓冲的数量和大小
+    hls_mp4_buffer_size 1m;//缓冲了1m后允许客户端播放
+    hls_mp4_max_buffer_size 5m;//有些视频的元数据以较大，所以允许最大缓冲区
+}
+
+```
+
+
+### 使用HDS进行流式传输
+#### 问题
+您需要支持Adobe的HTTP动态数据流（HDS），该数据已经被碎片化并与元数据分离。
+#### 解决方案
+使用NGINX Plus支持碎片化FLV文件（F4F）模块为您的用户提供Adobe Adaptive Streaming：
+```
+location /video/ {
+    alias /var/www/transformed_video;
+    f4f;
+    f4f_buffer_size 512k;//索引文件的缓冲区大小。
+}
+
+```
+该示例指示NGINX Plus使用NGINX Plus F4F模块将先前分散的介质从磁盘上的位置提供给客户端。 索引文件（.f4x）的缓冲区大小设置为512千字节。
+
+### 带宽限制
+#### 问题
+您需要将带宽限制到下游媒体流客户端，而不会影响观看体验。
+#### 解决方案
+```
+location /video/ {
+    mp4;
+    mp4_limit_rate_after 15s;//15秒后开始限制
+    mp4_limit_rate 1.2;//下载速度是播放速度的1.2倍
+}
+
+```
+此配置允许下游客户端在应用比特率限制之前下载15秒。 15秒后，客户端可以以比特率120％的速率下载媒体，这使得客户端的下载速度总是比他们播放的速度快。
+
+
+# 高级活动监视
+
+
+### 高级活动监视
 #### 问题
 
 #### 解决方案
-
-
-
-
-
-### 高可用性部署模式
-#### 问题
-
-#### 解决方案
-
-
-
-
-
-
-### 高可用性部署模式
-#### 问题
-
-#### 解决方案
-
 
 
 
