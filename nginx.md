@@ -31,7 +31,7 @@ useradd -s /sbin/nologin www
 
 生成配置文件
 ```
-./configure --prefix=/usr/local/nginx --without-http_memcached_module --user=www --group=www --with-http_stub_status_module --with-http_ssl_module --with-http_gzip_static_module --with-pcre
+./configure --user=nginx --group=nginx --with-threads --with-http_ssl_module --with-http_v2_module --with-http_realip_module --with-http_addition_module --with-http_sub_module --with-http_geoip_module --with-http_image_filter_module --with-http_xslt_module --with-http_dav_module --with-http_flv_module --with-http_mp4_module --with-http_gunzip_module --with-http_gzip_static_module --with-http_auth_request_module  --with-http_random_index_module --with-http_secure_link_module --with-http_degradation_module --with-http_slice_module --with-http_stub_status_module --without-http_charset_module  --with-mail  --with-stream  --with-stream_ssl_module  --with-stream_realip_module  --with-stream_geoip_module  --with-stream_ssl_preread_module  --with-google_perftools_module --with-compat
 ```
 
 
