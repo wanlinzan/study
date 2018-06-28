@@ -27,7 +27,7 @@ yum -y install libxml2-devel curl-devel
 
 生成配置文件
 ```
-./configure --prefix=/usr/local/php --enable-fpm --with-curl --with-pdo-mysql --with-openssl
+./configure --prefix=/usr/local/php --enable-fpm --with-fpm-user=www --with-fpm-group=www  --with-curl --with-pdo-mysql --with-openssl --with-config-file-path=/usr/local/php --with-config-file-scan-dir=/usr/local/php/conf --enable-exif  --enable-ftp --with-gd --enable-gd-jis-conv --enable-mbstring --enable-embedded-mysqli --enable-zip --enable-mysqlnd
 ```
 
 
@@ -39,9 +39,9 @@ make && make install
 
 复制php.ini配置文件
 ```
-cp /usr/local/src/php-7.2.3/php.ini-production /usr/local/php/lib/php.ini
+cp /usr/local/src/php-7.2.3/php.ini-production /usr/local/php/php.ini
 ```
-
+ 
 
 添加php-fpm配置文件
 ```
@@ -51,7 +51,7 @@ cp /usr/lcoal/src/php-7.2.3/etc/php-fpm.d/www.conf.default /usr/lcoal/php/etc/ph
 
 修改php-fpm子进程用户为www
 ```
-vim /usr/local/php/php-fpm.d/www.conf
+vim /usr/local/php/etc/php-fpm.d/www.conf
 
 #修改
 user = www
