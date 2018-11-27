@@ -27,7 +27,7 @@ yum -y install libxml2-devel curl-devel
 
 生成配置文件
 ```
-./configure --prefix=/usr/local/php --enable-fpm --with-fpm-user=www --with-fpm-group=www  --with-curl --with-pdo-mysql --with-openssl --with-config-file-path=/usr/local/php --with-config-file-scan-dir=/usr/local/php/conf --enable-exif  --enable-ftp --with-gd --enable-gd-jis-conv --enable-mbstring --enable-embedded-mysqli --enable-zip --enable-mysqlnd
+./configure --prefix=/usr/local/php --sysconfdir=/user/local/php/conf --enable-fpm --with-fpm-user=www --with-fpm-group=www --with-fpm-systemd  --with-curl --with-pdo-mysql --with-openssl --with-kerberos --with-system-ciphers --with-pcre-regex --with-pcre-jit --with-zlib --enable-bcmath --with-bz2 --enable-calendar --enable-ftp --with-config-file-path=/usr/local/php/conf --with-config-file-scan-dir=/usr/local/php/conf --disable-short-tags --enable-exif --enable-libgcc  --enable-ftp --with-imap --with-interbase --enable-intl --with-gd --with-gettext --with-gmp --with-ldap --with-ldap-sasl --with-libmbfl --with-onig --with-mhash --enable-gd-jis-conv --enable-mbstring --with-libzip --enable-embedded-mysqli --with-mysqli --enable-pcntl --with-pdo-dblib --with-pdo-firebird --with-pdo-mysql --with-zlib-dir --with-pdo-pgsql --with-pgsql --enable-sockets --with-iconv-dir --with-xsl --with-xmlrpc --with-sodium --with-imap-ssl --with-password-argon2 --enable-sysvmsg --enable-sysvsem --enable-sysvshm --with-tidy --with-libexpat-dir --enable-wddx --with-pspell --with-libedit --with-readline --with-recode --with-pear --with-mm --enable-shmop --with-libxml-dir --with-snmp --with-openssl-dir --enable-soap --enable-zip --enable-mysqlnd
 ```
 
 
